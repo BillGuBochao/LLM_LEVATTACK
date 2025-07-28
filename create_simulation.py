@@ -53,7 +53,7 @@ def generate_depedent_gauss(base_dir: str, rows: int, cols: int, mean: float, co
 if __name__ == "__main__":
     
     #====================================================================================================
-    # Experiment 0: 
+    # Experiment0: 
 
     # base_dir = "experiment0"
     # row_count = 500
@@ -66,16 +66,61 @@ if __name__ == "__main__":
     # create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
     #                             std = std, decimals = decimals, var_list = var_list)
     
-     #====================================================================================================
-    # Experiment 1: 
+    #====================================================================================================
+    # Experiment1: 
 
-    base_dir = "experiment1"
+    # base_dir = "experiment1"
+    # row_count = 3500
+    # decimals = 0 
+    # mean = 10000
+    # std = 10000
+    # var_list = [4]
+
+
+    # create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
+    #                             std = std, decimals = decimals, var_list = var_list)
+
+    #====================================================================================================
+    # Experiment2: 
+
+    # base_dir = "experiment2"
+    # rows = 1000
+    # cols = 4
+    # mean = 10000
+    # corr = 0.2
+    # std = 10000
+    # decimals = 0
+
+    # generate_depedent_gauss(base_dir = base_dir, rows = rows, cols = cols, mean = mean, corr = corr,
+    #                             std = std, decimals = decimals)
+    
+    
+    #====================================================================================================
+    # Experiment3: 
+
+    # base_dir = "experiment3"
+    # rows = 1000
+    # cols = 4
+    # mean = 10000
+    # corr = 0.6
+    # std = 10000
+    # decimals = 0
+
+    # generate_depedent_gauss(base_dir = base_dir, rows = rows, cols = cols, mean = mean, corr = corr,
+    #                             std = std, decimals = decimals)
+
+
+#====================================================================================================
+    # Experiment4: 
+
+    base_dir = "experiment4"
     row_count = 3500
     decimals = 0 
-    mean = 10000
-    std = 10000
-    var_list = [4]
+    mean = 1000
+    std = 100
+    var_list = [2]
 
 
     create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
                                 std = std, decimals = decimals, var_list = var_list)
+    

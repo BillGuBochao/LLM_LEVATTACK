@@ -61,7 +61,7 @@ def testing_pipeline(base_dir: str, syn_len = [0.5, 1.0],
 
 
 if __name__ == "__main__":
-    BASE_DIR = "experiment1"
+    BASE_DIR = "experiment4"
     testing_pipeline(BASE_DIR, syn_len = [0.5,1,3,5], min_probability = [0.05, 0.1], 
                     max_probability = [0.1,0.15], tendency= [1.5,2.0,3.0])
     print()
