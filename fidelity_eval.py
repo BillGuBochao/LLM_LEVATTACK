@@ -3,9 +3,11 @@ import glob
 import pandas as pd
 import numpy as np
 from sklearn import metrics
+from sklearn.preprocessing import MinMaxScaler
 from pathlib import Path
 from scipy.spatial.distance import jensenshannon
 import torch
+from geomloss import SamplesLoss
 from typing import Dict, Tuple, Optional, Union, List
 
 
@@ -91,6 +93,42 @@ def jensen_shannon_distance(X_real, X_syn):
     
     return float(js_dist)
 
+
+def wasserstein_distance(X_real, X_syn):
+    """
+    Compare Wasserstein distance between original and synthetic one-hot encoded data.
+
+    Args:
+        X_real: numpy array, ground truth one-hot encoded data (n_samples_real, n_features)
+        X_syn: numpy array, synthetic one-hot encoded data (n_samples_syn, n_features)
+
+    Returns:
+        float: Wasserstein distance
+    """
+    # Flatten arrays
+    X_real_flat = X_real.reshape(len(X_real), -1)
+    X_syn_flat = X_syn.reshape(len(X_syn), -1)
+
+    # Pad synthetic data if it has fewer samples
+    if len(X_real_flat) > len(X_syn_flat):
+        padding = np.zeros((len(X_real_flat) - len(X_syn_flat), X_real_flat.shape[1]))
+        X_syn_flat = np.concatenate([X_syn_flat, padding])
+
+    # Scale data to [0, 1] range
+    scaler = MinMaxScaler().fit(X_real_flat)
+    X_real_scaled = scaler.transform(X_real_flat)
+    X_syn_scaled = scaler.transform(X_syn_flat)
+
+    # Convert to PyTorch tensors
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    X_real_tensor = torch.from_numpy(X_real_scaled).float().to(device)
+    X_syn_tensor = torch.from_numpy(X_syn_scaled).float().to(device)
+    
+    # Compute Wasserstein distance using Sinkhorn algorithm
+    OT_solver = SamplesLoss(loss="sinkhorn")
+    distance = OT_solver(X_real_tensor, X_syn_tensor).cpu().numpy().item()
+
+    return float(distance)
 
 def find_synthetic_file(directory: str, specific_file: str) -> Optional[str]:
     """
@@ -491,3 +529,100 @@ def update_mia_summary_with_JS(
 
    
    return summary_df
+
+
+
+def update_mia_summary_with_WS(
+    directory: str,
+    encode_categorical: bool = True,
+    verbose: bool = True,
+    ws_column_name: str = None
+) -> pd.DataFrame:
+    """
+    Update mia_evaluation_summary.csv with Wasserstein distance scores for each synthetic file.
+    
+    Args:
+        directory: Directory containing the data files
+        encode_categorical: Whether to one-hot encode categorical variables
+        verbose: Whether to print progress information
+        ws_column_name: Name for the Wasserstein column (default: "wasserstein")
+    
+    Returns:
+        Updated DataFrame
+    """
+    dir_path = Path(directory)
+    
+    # Find mia_evaluation_summary.csv
+    summary_files = list(dir_path.rglob('mia_evaluation_summary.csv'))
+    if not summary_files:
+        raise FileNotFoundError("Could not find mia_evaluation_summary.csv")
+    
+    summary_path = summary_files[0]
+    summary_df = pd.read_csv(summary_path)
+    
+    if verbose:
+        print(f"Found summary file: {summary_path}")
+        print(f"Processing {len(summary_df)} rows...")
+    
+    # Find member file once
+    member_file = find_member_file(directory)
+    if not member_file:
+        raise FileNotFoundError("Could not find member.csv file")
+    
+    # Load member data once
+    real_df = pd.read_csv(member_file)
+    
+    # Set column name for Wasserstein scores
+    if ws_column_name is None:
+        ws_column_name = "wasserstein"
+    
+    # Initialize Wasserstein column
+    summary_df[ws_column_name] = np.nan
+    
+    # Process each unique synthetic file
+    unique_synth_files = summary_df['synth_file'].unique()
+    
+    for synth_file_name in unique_synth_files:
+        if verbose:
+            print(f"\nProcessing: {synth_file_name}")
+        
+        try:
+            # Find the synthetic file
+            syn_file_path = find_synthetic_file(directory, synth_file_name)
+            if not syn_file_path:
+                print(f"Warning: Could not find {synth_file_name}")
+                continue
+            
+            # Load synthetic data
+            syn_df = pd.read_csv(syn_file_path)
+            
+            # Find common columns
+            common_cols = sorted(set(real_df.columns) & set(syn_df.columns))
+            real_aligned = real_df[common_cols]
+            syn_aligned = syn_df[common_cols]
+            
+            # Encode if needed
+            if encode_categorical:
+                real_array, syn_array = one_hot_encode_data(real_aligned, syn_aligned)
+            else:
+                real_array, syn_array = prepare_data_for_mmd(real_aligned, syn_aligned)
+            
+            # Compute Wasserstein distance
+            score = wasserstein_distance(real_array, syn_array)
+            
+            # Update all rows with this synthetic file
+            mask = summary_df['synth_file'] == synth_file_name
+            summary_df.loc[mask, ws_column_name] = score
+            
+            if verbose:
+                print(f"  Wasserstein distance: {score:.6f}")
+                
+        except Exception as e:
+            print(f"Error processing {synth_file_name}: {e}")
+            # Leave as NaN for error cases
+    
+    # Save the updated summary
+    summary_df.to_csv(summary_path, index=False)
+    
+    
+    return summary_df

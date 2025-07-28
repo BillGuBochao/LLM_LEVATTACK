@@ -3,7 +3,11 @@ import os
 from lev_attack import lev_attack_evaluation
 from realtabformer_generate import train_and_generate_synthetic_data
 from digit_modifier import creating_modified_csv
-from fidelity_eval import add_all_kernel_scores_to_summary, update_mia_summary_with_JS
+from fidelity_eval import (
+    add_all_kernel_scores_to_summary,
+    update_mia_summary_with_JS,
+    update_mia_summary_with_WS,
+)
 import numpy as np
 import pandas as pd
 
@@ -50,7 +54,9 @@ def testing_pipeline(base_dir: str, syn_len = [0.5, 1.0],
     # lev_attack_evaluation(base_dir = base_dir)
 
     # add_all_kernel_scores_to_summary(directory= base_dir)
-    update_mia_summary_with_JS(directory= base_dir)
+    # update_mia_summary_with_JS(directory= base_dir)
+    update_mia_summary_with_WS(directory = base_dir) 
+
 
 
 
