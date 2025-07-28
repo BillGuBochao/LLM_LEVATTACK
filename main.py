@@ -3,6 +3,7 @@ import os
 from lev_attack import lev_attack_evaluation
 from realtabformer_generate import train_and_generate_synthetic_data
 from digit_modifier import creating_modified_csv
+from fidelity_eval import add_all_kernel_scores_to_summary, update_mia_summary_with_JS
 import numpy as np
 import pandas as pd
 
@@ -31,23 +32,25 @@ def testing_pipeline(base_dir: str, syn_len = [0.5, 1.0],
     '''
 
     
-    experiment_id =train_and_generate_synthetic_data(base_dir= base_dir, 
-                                                     multipliers = syn_len, 
-                                                     processor= False)
+    # experiment_id =train_and_generate_synthetic_data(base_dir= base_dir, 
+    #                                                  multipliers = syn_len, 
+    #                                                  processor= False)
     
     
-    creating_modified_csv(base_dir = base_dir, method = method, 
-                        min_probability = min_probability,
-                        max_probability = max_probability)
+    # creating_modified_csv(base_dir = base_dir, method = method, 
+    #                     min_probability = min_probability,
+    #                     max_probability = max_probability)
     
 
-    for t in tendency:
-        _= train_and_generate_synthetic_data(base_dir= base_dir, multipliers = syn_len, 
-                                                     processor= True, tendency= t, 
-                                                     experiment_id= experiment_id)
+    # for t in tendency:
+    #     _= train_and_generate_synthetic_data(base_dir= base_dir, multipliers = syn_len, 
+    #                                                  processor= True, tendency= t, 
+    #                                                  experiment_id= experiment_id)
 
-    lev_attack_evaluation(base_dir = base_dir)
+    # lev_attack_evaluation(base_dir = base_dir)
 
+    # add_all_kernel_scores_to_summary(directory= base_dir)
+    update_mia_summary_with_JS(directory= base_dir)
 
 
 

@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 from sklearn import metrics
 from pathlib import Path
+from scipy.spatial.distance import jensenshannon
+import torch
 from typing import Dict, Tuple, Optional, Union, List
 
 
@@ -51,6 +53,43 @@ def maximum_mean_discrepancy(X_real, X_syn, kernel="rbf"):
         raise ValueError(f"Unsupported kernel {kernel}")
     
     return float(score)
+
+def jensen_shannon_distance(X_real, X_syn):
+    """
+    Evaluate the Jensen-Shannon distance between two one-hot encoded arrays.
+    For one-hot encoded data, this computes the JS distance between the categorical distributions.
+    
+    Args:
+        X_real: numpy array, ground truth one-hot encoded data (n_samples_real, n_features)
+        X_syn: numpy array, synthetic one-hot encoded data (n_samples_syn, n_features)
+        
+    Returns:
+        float: Jensen-Shannon distance between the categorical distributions
+    """
+    if X_real.shape[1] != X_syn.shape[1]:
+        raise ValueError("X_real and X_syn must have the same number of features")
+    
+    # For one-hot encoded data, compute the probability distribution over categories
+    # Sum across samples to get category frequencies
+    gt_probs = X_real.sum(axis=0) / X_real.sum()  # Probability of each category
+    syn_probs = X_syn.sum(axis=0) / X_syn.sum()  # Probability of each category
+    
+    # Add small epsilon to avoid log(0)
+    epsilon = 1e-8
+    gt_probs = gt_probs + epsilon
+    syn_probs = syn_probs + epsilon
+    
+    # Renormalize after adding epsilon
+    gt_probs = gt_probs / gt_probs.sum()
+    syn_probs = syn_probs / syn_probs.sum()
+    
+    # Compute Jensen-Shannon distance
+    js_dist = jensenshannon(gt_probs, syn_probs)
+    
+    if np.isnan(js_dist):
+        raise RuntimeError("NaNs in Jensen-Shannon computation")
+    
+    return float(js_dist)
 
 
 def find_synthetic_file(directory: str, specific_file: str) -> Optional[str]:
@@ -280,7 +319,7 @@ def update_mia_summary_with_mmd(
    
    for synth_file_name in unique_synth_files:
        if verbose:
-           print(f"\nProcessing: {synth_file_name}")
+           print(f"\nProcessing: {synth_file_name} using mmb_{kernel}")
        
        try:
            # Find the synthetic file
@@ -354,5 +393,101 @@ def add_all_kernel_scores_to_summary(
            encode_categorical=encode_categorical,
            verbose=verbose,
        )
+   
+   return summary_df
+
+
+
+
+def update_mia_summary_with_JS(
+   directory: str,
+   encode_categorical: bool = True,
+   verbose: bool = True,
+   js_column_name: str = None
+) -> pd.DataFrame:
+   """
+   Update mia_evaluation_summary.csv with Jenson Shanon scores for each synthetic file.
+   
+   Args:
+       directory: Directory containing the data files
+       encode_categorical: Whether to one-hot encode categorical variables
+       verbose: Whether to print progress information
+       js_column_name: Name for the Jenson Shanon column (default: "Jenson-Shannon")
+   
+   Returns:
+       Updated DataFrame
+   """
+   dir_path = Path(directory)
+   
+   # Find mia_evaluation_summary.csv
+   summary_files = list(dir_path.rglob('mia_evaluation_summary.csv'))
+   if not summary_files:
+       raise FileNotFoundError("Could not find mia_evaluation_summary.csv")
+   
+   summary_path = summary_files[0]
+   summary_df = pd.read_csv(summary_path)
+   
+   if verbose:
+       print(f"Found summary file: {summary_path}")
+       print(f"Processing {len(summary_df)} rows...")
+   
+   # Find member file once
+   member_file = find_member_file(directory)
+   if not member_file:
+       raise FileNotFoundError("Could not find member.csv file")
+   
+   # Load member data once
+   real_df = pd.read_csv(member_file)
+   
+   # Set column name for JS scores
+   if js_column_name is None:
+       js_column_name = "Jenson-Shannon"
+   
+   # Initialize JS column
+   summary_df[js_column_name] = np.nan
+   
+   # Process each unique synthetic file
+   unique_synth_files = summary_df['synth_file'].unique()
+   
+   for synth_file_name in unique_synth_files:
+       if verbose:
+           print(f"\nProcessing: {synth_file_name} using Jenson-Shanon")
+       
+       try:
+           # Find the synthetic file
+           syn_file_path = find_synthetic_file(directory, synth_file_name)
+           if not syn_file_path:
+               print(f"Warning: Could not find {synth_file_name}")
+               continue
+           
+           # Load synthetic data
+           syn_df = pd.read_csv(syn_file_path)
+           
+           # Find common columns
+           common_cols = sorted(set(real_df.columns) & set(syn_df.columns))
+           real_aligned = real_df[common_cols]
+           syn_aligned = syn_df[common_cols]
+           
+           # Encode if needed
+           if encode_categorical:
+               real_array, syn_array = one_hot_encode_data(real_aligned, syn_aligned)
+           else:
+               real_array, syn_array = prepare_data_for_mmd(real_aligned, syn_aligned)
+           
+           # Compute JS score
+           score = jensen_shannon_distance(real_array, syn_array)
+           
+           # Update all rows with this synthetic file
+           mask = summary_df['synth_file'] == synth_file_name
+           summary_df.loc[mask, js_column_name] = score
+           
+           
+       except Exception as e:
+           print(f"Error processing {synth_file_name}: {e}")
+           # Leave as NaN for error cases
+   
+   # Save the updated summary
+   summary_df.to_csv(summary_path, index=False)
+
    
    return summary_df
