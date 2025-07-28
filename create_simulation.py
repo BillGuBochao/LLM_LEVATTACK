@@ -56,7 +56,7 @@ if __name__ == "__main__":
     # Experiment 0: 
 
     # base_dir = "experiment0"
-    # row_count = 900
+    # row_count = 500
     # decimals = 0 
     # mean = 10000
     # std = 10000

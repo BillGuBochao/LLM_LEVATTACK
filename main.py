@@ -36,34 +36,34 @@ def testing_pipeline(base_dir: str, syn_len = [0.5, 1.0],
     '''
 
     
-    # experiment_id =train_and_generate_synthetic_data(base_dir= base_dir, 
-    #                                                  multipliers = syn_len, 
-    #                                                  processor= False)
+    experiment_id =train_and_generate_synthetic_data(base_dir= base_dir, 
+                                                     multipliers = syn_len, 
+                                                     processor= False)
     
     
-    # creating_modified_csv(base_dir = base_dir, method = method, 
-    #                     min_probability = min_probability,
-    #                     max_probability = max_probability)
+    creating_modified_csv(base_dir = base_dir, method = method, 
+                        min_probability = min_probability,
+                        max_probability = max_probability)
     
 
-    # for t in tendency:
-    #     _= train_and_generate_synthetic_data(base_dir= base_dir, multipliers = syn_len, 
-    #                                                  processor= True, tendency= t, 
-    #                                                  experiment_id= experiment_id)
+    for t in tendency:
+        _= train_and_generate_synthetic_data(base_dir= base_dir, multipliers = syn_len, 
+                                                     processor= True, tendency= t, 
+                                                     experiment_id= experiment_id)
 
-    # lev_attack_evaluation(base_dir = base_dir)
+    lev_attack_evaluation(base_dir = base_dir)
 
-    # add_all_kernel_scores_to_summary(directory= base_dir)
-    # update_mia_summary_with_JS(directory= base_dir)
+    add_all_kernel_scores_to_summary(directory= base_dir)
+    update_mia_summary_with_JS(directory= base_dir)
     update_mia_summary_with_WS(directory = base_dir) 
 
 
 
 
 if __name__ == "__main__":
-    BASE_DIR = "experiment0"
-    testing_pipeline(BASE_DIR, syn_len = [0.5,1,3,5], min_probability = [], 
-                    max_probability = [], tendency= [0.001])
+    BASE_DIR = "experiment1"
+    testing_pipeline(BASE_DIR, syn_len = [0.5,1,3,5], min_probability = [0.05, 0.1], 
+                    max_probability = [0.1,0.15], tendency= [1.5,2.0,3.0])
     print()
     print('Done')
     
