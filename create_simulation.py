@@ -65,6 +65,20 @@ if __name__ == "__main__":
 
     # create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
     #                             std = std, decimals = decimals, var_list = var_list)
+
+     #====================================================================================================
+    # Experiment0.5: 
+
+    base_dir = "experiment0.5"
+    row_count = 500
+    decimals = 0 
+    mean = 500
+    std = 150
+    var_list = [6]
+
+
+    create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
+                                std = std, decimals = decimals, var_list = var_list)
     
     #====================================================================================================
     # Experiment1: 
@@ -93,7 +107,19 @@ if __name__ == "__main__":
 
     # generate_depedent_gauss(base_dir = base_dir, rows = rows, cols = cols, mean = mean, corr = corr,
     #                             std = std, decimals = decimals)
-    
+    #====================================================================================================
+    # Experiment2.5: 
+
+    # base_dir = "experiment2.5"
+    # rows = 1000
+    # cols = 8
+    # mean = 50
+    # corr = 0.2
+    # std = 15
+    # decimals = 0
+
+    # generate_depedent_gauss(base_dir = base_dir, rows = rows, cols = cols, mean = mean, corr = corr,
+    #                             std = std, decimals = decimals)
     
     #====================================================================================================
     # Experiment3: 
@@ -109,18 +135,44 @@ if __name__ == "__main__":
     # generate_depedent_gauss(base_dir = base_dir, rows = rows, cols = cols, mean = mean, corr = corr,
     #                             std = std, decimals = decimals)
 
+#====================================================================================================
+    # Experiment3.5: 
+
+    # base_dir = "experiment3.5"
+    # rows = 1000
+    # cols = 8
+    # mean = 50
+    # corr = 0.6
+    # std = 15
+    # decimals = 0
+
+    # generate_depedent_gauss(base_dir = base_dir, rows = rows, cols = cols, mean = mean, corr = corr,
+    #                             std = std, decimals = decimals)
+
 
 #====================================================================================================
-    # Experiment4: 
+    # Experiment4: (The one where attack doesn't work)
 
-    base_dir = "experiment4"
-    row_count = 3500
-    decimals = 0 
-    mean = 1000
-    std = 100
-    var_list = [2]
+    # base_dir = "experiment4"
+    # row_count = 3500
+    # decimals = 0 
+    # mean = 1000
+    # std = 100
+    # var_list = [2]
 
 
-    create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
-                                std = std, decimals = decimals, var_list = var_list)
+    # create_experiment_directory(base_dir = base_dir, row_count = row_count, mean = mean, 
+    #                             std = std, decimals = decimals, var_list = var_list)
     
+#====================================================================================================
+    # Experiment5: (The one where attack doesn't work)
+    
+    # base_dir = "experiment5"
+    # row_count = 1000
+    # decimals = 0
+    # mean = 1000
+    # std = 100
+    # var_list = [20]
+    # create_experiment_directory(base_dir=base_dir, row_count=row_count, mean=mean,
+    #                             std=std, decimals=decimals, var_list=var_list)
+
