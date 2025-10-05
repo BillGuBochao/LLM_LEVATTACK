@@ -1,8 +1,7 @@
 
-# ====== For the pipeline
+# ====== For the pipeline 
 
 *.csv
-*.png
 
 experiment*/
 rtf_model/

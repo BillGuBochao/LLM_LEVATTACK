@@ -1,25 +1,8 @@
-
-# ====== For the pipeline
-
-*.csv
-*.png
-
-experiment*/
-rtf_model/
-rtf_checkpoints/
-junk/
-
-
-
-
-# ====== from gitignore of REaLTabFormer 
-
-
 poetry.lock
 
 experiments/
 rtf*checkpoints/
-REaLTabFormer/tests/realtabformer/data/
+tests/realtabformer/data/
 
 *.DS_Store
 
