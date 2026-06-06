@@ -82,11 +82,4 @@ Each subdirectory contains its own README with specific commands and configurati
 
 If you use this code in your research, please cite our paper:
 
-```bibtex
-@article{yourlastname2024tables,
-  title={When Tables Leak: Attacking Digit Memorization in LLM-Based Tabular Data Generation},
-  author={Your Name and Co-authors},
-  journal={arXiv preprint arXiv:XXXX.XXXXX},
-  year={2024}
-}
-```
+

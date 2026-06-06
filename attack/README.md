@@ -35,33 +35,33 @@ Also assume you have LLMs either loaded on local or have an active Hugging Face 
 
 ```bash
 # Step 1: Generate synthetic data using LLMs, automatically creates an experiments directory
-python generate_llms.py 
+python scripts/generate_llms.py 
 
 # Step 2: Run Levenshtein attack on generated data
-python run_lev_attack_sft.py 
+python scripts/run_lev_attack_sft.py 
 ```
 
 ### Example 2: Complete Attack Pipeline with GAN/VAE Models
 
 ```bash
 # Step 1: Generate synthetic data using CTGAN, TVAE, and GREAT
-python generate_synthcity.py 
+python scripts/generate_synthcity.py 
 
 # Step 2: Run Levenshtein attack on generated data
-python run_lev_attack_sft.py 
+python scripts/run_lev_attack_sft.py 
 ```
 
 ### Example 3: Full Evaluation (All Models)
 
 ```bash
 # Step 1: Generate data with all LLM-based models
-python generate_llms.py 
+python scripts/generate_llms.py 
 
 # Step 2: Generate data with GAN/VAE models
-python generate_synthcity.py 
+python scripts/generate_synthcity.py 
 
 # Step 3: Run comprehensive attack evaluation
-python run_lev_attack_sft.py 
+python scripts/run_lev_attack_sft.py 
 ```
 
 ### Example 4: Attack Existing Synthetic Data
@@ -69,5 +69,5 @@ python run_lev_attack_sft.py
 If you already have synthetic data generated:
 ```bash
 # Simply run the attack on your directory
-python run_lev_attack_sft.py 
+python scripts/run_lev_attack_sft.py 
 ```
