@@ -1,157 +1,43 @@
 
 # Artifact Appendix (Required for all badges)
 
-Paper title: **Enter the exact title of your PETS accepted paper here**
+Paper title: **When Tables Leak: Attacking String Memorization in LLM-Based Tabular Data Generation**
 
 Requested Badge(s):
   - [X] **Available**
   - [ ] **Functional**
   - [ ] **Reproduced**
 
-Authors can provide this content _either_ as a separate file in their artifact
-_or_ as part of their existing documentation (e.g., `README.md`). In the latter
-case, you should have the same section titles as in this template.
 
-This template includes several placeholders. When filling in this template for
-their artifact, the authors should:
+## Description 
+This the artifact for the paper "When Tables Leak: Attacking String Memorization in LLM-Based Tabular Data Generation." The authors are: Joshua Ward, Bochau Gu, Chi-Hua Wang, Guang Cheng and the paper is featured in PoPets 2026.3. This contains the code, intermidary data, results, and tables/ figures for the paper.
 
-1. Remove this note.
-2. Delete the sections that are _not_ required for the badge(s) they are
-   applying for.
-3. Omit suffixes of the form "(required/encouraged for badge ...)" from the
-   section titles.
-4. Authors should not leave the placeholder descriptions initially provided with
-   this file into the submitted version with their artifact.
+### Security/Privacy Issues and Ethical Concerns 
+There are no immediate security or privacy concerns for a user. The membership inference attacks and defenses are only deployed on public benchmarks and do not require making a local system vulnerable. 
 
-While this template is provided for artifact review, you should write your
-instructions for someone trying to reuse your artifact in the future (i.e., not
-an artifact reviewer).
+## Environment
 
-## Description (Required for all badges)
-Replace this with the following:
+The artifact can be accessed at https://github.com/BillGuBochao/LLM_LEVATTACK where there is a conda environment and a full instructions that can be used to run the artifact.
 
-1. List the paper that the artifact relates to (i.e., paper title, authors,
-   year, or even a BibTex cite).
-2. A short description of your artifact and how it is relevant to your paper.
+### Accessibility
 
-### Security/Privacy Issues and Ethical Concerns (Required for all badges)
-
-Replace this with a description of security or privacy risks that your artifact
-may hold for the machine of the person trying to evaluate or reuse your
-artifact. This is especially relevant for artifacts that _disable a security
-mechanism_, such as a firewall, ASLR, etc., to demonstrate an attack, as well as
-to artifacts that _run vulnerable code_, such as exploits, malware samples,
-etc., to demonstrate a vulnerability.
-
-User study artifacts that include anonymized transcripts or survey responses
-should list the ethical review / IRB process followed to obtain participants'
-consent to publishing this anonymized dataset. They may also list how
-participants were compensated.
-
-
-## Environment (Required for all badges)
-
-In the following, describe how to access your artifact and all related and
-necessary data and software components. Afterward, describe how to set up
-everything and how to verify that everything is set up correctly.
-
-### Accessibility (Required for all badges)
-
-Replace the following by a description of how to access your artifact via
-persistent sources. Valid hosting options are institutional and third-party
-digital repositories (e.g., GitHub, Gitlab, BitBucket, Zenodo, Figshare, etc.).
-Please do not use personal web pages or cloud storage services like Google
-Drive, Dropbox, etc.
-
-Note that once your artifact evaluation is finalized and a badge decision has
-been made, artifact chairs will collect a stable and persistent reference to
-your artifact to list on the website. For version-controlled repositories (e.g.,
-Git repositories), this will be a specific commit-id or tag.
-
-You _should not_ link to a specific commit here at submission time, as changes
-will likely happen during the evaluation process to address the reviewers'
-feedback, resulting in the link being out-of-date. Instead, you may link to the
-latest commit in your branch (e.g. main) as follows:
-https://github.com/PoPETS-AEC/example-docker-python-pip/tree/main
-
-
-Include the expected output.
+All data and code can be found at: https://github.com/BillGuBochao/LLM_LEVATTACK
 
 ### Main Results and Claims
 
-List all your paper's results and claims that are supported by your submitted
-artifacts.
+#### Main Result 1: LLM Attacks
 
-#### Main Result 1: Name
+There are 8 figures and 10 tables in this paper. The main results are Tables 1 and 2, which show that ICL and SFT models are suspectible to the main attack in the paper, LevAtt.
 
-Describe the results in 1 to 3 sentences. Mention what the independent and
-dependent variables are; independent variables are the ones on the x-axes of
-your figures, whereas the dependent ones are on the y-axes. By varying the
-independent variable (e.g., file size) in a given manner (e.g., linearly), we
-expect to see trends in the dependent variable (e.g., runtime, communication
-overhead) vary in another manner (e.g., exponentially). Refer to the related
-sections, figures, and/or tables in your paper and reference the experiments
-that support this result/claim. See example below.
+#### Main Result 2: LLM Defenses 
 
-#### Main Result 2: Example Name
-
-Our paper claims that when varying the file size linearly, the runtime also
-increases linearly. This claim is reproducible by executing our
-[Experiment 2](#experiment-2-example-name). In this experiment, we change the
-file size linearly, from 2KB to 24KB, at intervals of 2KB each, and we show that
-the runtime also increases linearly, reaching at most 1ms. We report these
-results in "Figure 1a" and "Table 3" (Column 3 or Row 2) of our paper.
+The main results for the defense is Figure 8, which show that SFT models with the TLP defense are able to defeat LevAtt with very little fidelity loss.
 
 ### Experiments
-List each experiment to execute to reproduce your results. Describe:
- - How to execute it in detailed steps.
- - What the expected result is.
- - How long it takes to execute in human and compute times (approximately).
- - How much space it consumes on disk (approximately) (omit if <10GB).
- - Which claim and results does it support, and how.
 
-#### Experiment 1: Name
-- Time: replace with estimate in human-minutes/hours + compute-minutes/hours.
-- Storage: replace with estimate for disk space used (omit if <10GB).
-
-Provide a short explanation of the experiment and expected results. Describe
-thoroughly the steps to perform the experiment and to collect and organize the
-results as expected from your paper (see example below). Use code segments to
-simplify the workflow, as follows.
-
-```bash
-python3 experiment_1.py
-```
-
-#### Experiment 2: Example Name
-
-- Time: 10 human-minutes + 3 compute-hours
-- Storage: 20GB
-
-This example experiment reproduces
-[Main Result 2: Example Name](#main-result-2-example-name), the following script
-will run the simulation automatically with the different parameters specified in
-the paper. (You may run the following command from the example Docker image.)
-
-```bash
-python3 main.py
-```
-
-Results from this example experiment will be aggregated over several iterations
-by the script and output directly in raw format along with variances and
-standard deviations in the `output-folder/` directory. You will also find there
-the plots for "Figure 1a" in `.pdf` format and the table for "Table 3" in `.tex`
-format. These can be directly compared to the results reported in the paper, and
-should not quantitatively vary by more than 5% from expected results.
-
+Experiment replication details can be found in the ReadMes of both the attack and defense subdirectories of the repository. The expected results are a series of csv files and jpgs that contain leakage and fidelity results. These experiments will take quite some to execute. We estimate that this will be ~100 hours of GPU time on a modern gpu that has the size to fit mistral 8b and SFT it. For running the attacks, these should take several hours on a standard CPU. This code base is honestly quite difficult to work with as it was developed at several different times, over several different people, on several different servers and therefore we just apply for an available badge. We recommend running analyze.ipynb to verify the attack table and figure results of the paper. 
 
 
 ## Notes on Reusability (Encouraged for all badges)
+The main value of this codebase are LevAtt and TLP. LevAtt can be found in attack/synth_mia/attackers/lev_attack.py and TLP can be found in LLM_LEVATTACK/defense/tlp/realtabformer_generate.py.
 
-First, this section might not apply to your artifacts. Describe how your
-artifact can be used beyond your research paper, e.g., as a general framework.
-The overall goal of artifact evaluation is not only to reproduce and verify your
-research but also to help other researchers to re-use and extend your artifacts.
-Discuss how your artifacts can be adapted to other settings, e.g., more input
-dimensions, other datasets, and other behavior, through replacing individual
-modules and functionality or running more iterations of a specific module.
